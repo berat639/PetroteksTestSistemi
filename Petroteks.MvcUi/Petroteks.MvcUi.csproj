@@ -9,8 +9,8 @@
     <Folder Include="Pages\" />
     <Folder Include="wwwroot\CategoryImages\" />
     <Folder Include="wwwroot\BlogImages\" />
+    <Folder Include="wwwroot\HataKontrolLogs\" />
     <Folder Include="wwwroot\LanguageImages\" />
-    <Folder Include="wwwroot\Temp\" />
     <Folder Include="wwwroot\ProductImages\" />
     <Folder Include="wwwroot\UploadFiles\" />
   </ItemGroup>

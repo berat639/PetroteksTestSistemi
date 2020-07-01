@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using static Petroteks.Bll.Helpers.FriendlyUrlHelper;
 
 namespace Petroteks.MvcUi.Controllers
@@ -42,21 +43,34 @@ namespace Petroteks.MvcUi.Controllers
             webHostEnvironment = serviceProvider.GetService<IWebHostEnvironment>();
         }
 
+        class xmlWrite
+        {
 
+        }
 
         [Route("sitemap.xml")]
         public IActionResult SitemapXml()
         {
+            IActionResult staticfileload()
+            {
+                var dir = Path.Combine(webHostEnvironment.WebRootPath, "HataKontrolLogs");
+                Directory.CreateDirectory(dir);
+                string logfile = Path.Combine(dir, "Logx.txt");
+                System.IO.File.WriteAllText(logfile, "Static File Loaded", Encoding.UTF8);
+                var sitemapxml = Path.Combine(Path.Combine(webHostEnvironment.WebRootPath, "Temp"), "sitemap.xml");
+                return Content(System.IO.File.ReadAllText(sitemapxml), "text/xml");
+            }
             Response.Clear();
             Response.ContentType = "text/xml";
             StringBuilder sb = new StringBuilder();
-            if (CurrentWebsite != null && CurrentLanguage != null)
+            StringWriter sw = new StringWriter();
+            if (CurrentWebsite != null && CurrentLanguage != null )
             {
                 sb.AppendLine($"Lang: {CurrentLanguage.id}");
                 sb.AppendLine($"Web: {CurrentWebsite.id}");
                 try
                 {
-                    XmlTextWriter xtr = new XmlTextWriter(Response.Body, Encoding.UTF8);
+                    XmlTextWriter xtr = new XmlTextWriter(sw);
                     xtr.WriteStartDocument();
                     xtr.WriteStartElement("urlset");
                     xtr.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
@@ -145,20 +159,28 @@ namespace Petroteks.MvcUi.Controllers
 
                             foreach (Category item in Categories)
                             {
-                                sb.AppendLine($"{item.Name} kategorisi bilgisi alindi");
-                                xtr.WriteStartElement("url");
-                                xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("CategoryDetail", "Detail", new { categoryName = GetFriendlyTitle(item.Name), page = 1, category = item.id })}");
-                                xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
-                                xtr.WriteEndElement();
-                                sb.AppendLine($"{item.Name} kategorisi bilgisi yazildi");
+                                try
+                                {
+                                    sb.AppendLine($"{item.Name} kategorisi bilgisi alindi");
+                                    xtr.WriteStartElement("url");
+                                    xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("CategoryDetail", "Detail", new { categoryName = GetFriendlyTitle(item.Name), page = 1, category = item.id })}");
+                                    xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
+                                    xtr.WriteEndElement();
+                                    sb.AppendLine($"{item.Name} kategorisi bilgisi yazildi");
+                                }
+                                catch (Exception ex)
+                                {
+                                    xtr.WriteEndElement();
+                                    sb.AppendLine(ex.Message);
+                                }
                             }
                         }
-                        catch { }
+                        catch (Exception ex) { sb.AppendLine(ex.Message); }
 
                         try
                         {
 
-                            ICollection<Product> Products = productService.GetMany(x => x.IsActive == true,lang.id);
+                            ICollection<Product> Products = productService.GetMany(x => x.IsActive == true, lang.id);
                             sb.AppendLine($"Urun listesi olusturuldu");
 
                             var WebsiteProducts =
@@ -170,16 +192,24 @@ namespace Petroteks.MvcUi.Controllers
 
                             foreach (var item in WebsiteProducts)
                             {
-                                sb.AppendLine($"{item.ProductName} urun bilgisi alindi");
+                                try
+                                {
+                                    sb.AppendLine($"{item.ProductName} urun bilgisi alindi");
 
-                                xtr.WriteStartElement("url");
-                                xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("ProductDetail", "Detail", new { produtname = GetFriendlyTitle(item.ProductName), id = item.id })}");
-                                xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
-                                xtr.WriteEndElement();
-                                sb.AppendLine($"{item.ProductName} urun bilgisi yazildi");
+                                    xtr.WriteStartElement("url");
+                                    xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("ProductDetail", "Detail", new { produtname = GetFriendlyTitle(item.ProductName), id = item.id })}");
+                                    xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
+                                    xtr.WriteEndElement();
+                                    sb.AppendLine($"{item.ProductName} urun bilgisi yazildi");
+                                }
+                                catch (Exception ex)
+                                {
+                                    xtr.WriteEndElement();
+                                    sb.AppendLine(ex.Message);
+                                }
                             }
                         }
-                        catch { }
+                        catch (Exception ex) { sb.AppendLine(ex.Message); }
 
                         try
                         {
@@ -188,15 +218,23 @@ namespace Petroteks.MvcUi.Controllers
 
                             foreach (DynamicPage item in dynamicPages)
                             {
-                                sb.AppendLine($"{item.Name} sayfasi icin bilgi alindi");
-                                xtr.WriteStartElement("url");
-                                xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("DynamicPageView", "Home", new { pageName = GetFriendlyTitle(item.Name), id = item.id })}");
-                                xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
-                                xtr.WriteEndElement();
-                                sb.AppendLine($"{item.Name} sayfasi icin bilgi yazildi");
+                                try
+                                {
+                                    sb.AppendLine($"{item.Name} sayfasi icin bilgi alindi");
+                                    xtr.WriteStartElement("url");
+                                    xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("DynamicPageView", "Home", new { pageName = GetFriendlyTitle(item.Name), id = item.id })}");
+                                    xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
+                                    xtr.WriteEndElement();
+                                    sb.AppendLine($"{item.Name} sayfasi icin bilgi yazildi");
+                                }
+                                catch (Exception ex)
+                                {
+                                    xtr.WriteEndElement();
+                                    sb.AppendLine(ex.Message);
+                                }
                             }
                         }
-                        catch { }
+                        catch (Exception ex) { sb.AppendLine(ex.Message); }
 
                         try
                         {
@@ -205,16 +243,24 @@ namespace Petroteks.MvcUi.Controllers
 
                             foreach (Blog item in blogs)
                             {
-                                sb.AppendLine($"{item.Name} blogunun bilgisi alindi");
-                                xtr.WriteStartElement("url");
-                                xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("BlogDetail", "Home", new { title = GetFriendlyTitle(item.Title), id = item.id })}");
-                                xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
-                                xtr.WriteEndElement();
-                                sb.AppendLine($"{item.Name} blogunun bilgisi yazildi");
+                                try
+                                {
+                                    sb.AppendLine($"{item.Name} blogunun bilgisi alindi");
+                                    xtr.WriteStartElement("url");
+                                    xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("BlogDetail", "Home", new { title = GetFriendlyTitle(item.Title), id = item.id })}");
+                                    xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
+                                    xtr.WriteEndElement();
+                                    sb.AppendLine($"{item.Name} blogunun bilgisi yazildi");
+                                }
+                                catch (Exception ex)
+                                {
+                                    xtr.WriteEndElement();
+                                    sb.AppendLine(ex.Message);
+                                }
 
                             }
                         }
-                        catch { }
+                        catch (Exception ex) { sb.AppendLine(ex.Message); }
                     }
 
                     try
@@ -233,24 +279,37 @@ namespace Petroteks.MvcUi.Controllers
                     {
                         sb.AppendLine(ex.Message);
                     }
-
                 }
                 catch
                 {
                     sb.AppendLine("HATA HATA");
                 }
+                try
+                {
+                    var dir = Path.Combine(webHostEnvironment.WebRootPath, "HataKontrolLogs");
+                    Directory.CreateDirectory(dir);
+                    string logfile = Path.Combine(dir, "Log.txt");
+                    string sitemapfile = Path.Combine(dir, "sitemap.xml");
+                    try
+                    {
+                        System.IO.File.WriteAllText(sitemapfile, XDocument.Parse(sw.ToString()).ToString(), Encoding.UTF8);
+                    }
+                    catch
+                    {
+                        System.IO.File.WriteAllText(sitemapfile, sw.ToString(), Encoding.UTF8);
+                    }
+                    System.IO.File.WriteAllText(logfile, sb.ToString(), Encoding.UTF8);
+                }
+                catch 
+                {
+                   return staticfileload();
+                }
+                Response.WriteAsync(sw.ToString());
             }
-            try
+            else
             {
-                var dir = Path.Combine(webHostEnvironment.WebRootPath, "HataKontrolLogs");
-                Directory.CreateDirectory(dir);
-                string logfile = Path.Combine(dir, "Log.txt");
-                System.IO.File.WriteAllText(logfile, sb.ToString(), Encoding.UTF8);
+                return staticfileload();
             }
-            catch
-            {
-            }
-
             return View();
         }
     }
