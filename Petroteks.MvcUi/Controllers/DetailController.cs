@@ -27,8 +27,8 @@ namespace Petroteks.MvcUi.Controllers
                 int pagesize = 10;
                 List<Category> subCategories = categoryService.GetMany(x => x.WebSite == CurrentWebsite && x.Parentid == Category.id && x.IsActive == true, Category.Languageid.Value).OrderByDescending(x => x.Priority).ToList();
                 ICollection<Product> products = productService.GetMany(x => x.Categoryid == Category.id && x.IsActive == true, Category.Languageid.Value);
-                if (Category.Languageid!=CurrentLanguage.id)
-                    LoadLanguage(true,Category.Languageid);
+                if (Category.Languageid != CurrentLanguage.id)
+                    LoadLanguage(true, Category.Languageid);
                 return View(new ProductListViewModel()
                 {
                     Products = products.Skip((page - 1) * pagesize).Take(pagesize).OrderByDescending(x => x.Priority).ToList(),
