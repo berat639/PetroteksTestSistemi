@@ -76,6 +76,9 @@ namespace Petroteks.MvcUi
             services.AddScoped<IUI_NoticeService, UI_NoticeManager>();
             services.AddScoped<IUI_NoticeDal, EfUI_NoticeDal>();
 
+            services.AddSingleton<UrlControlHelper>();
+
+
             services.AddSingleton<IUserSessionService, UserSessionService>();
 
 
