@@ -117,7 +117,7 @@ namespace Petroteks.MvcUi.Controllers
                         sb.AppendLine($"İletişim bilgisi yazildi");
                     }
 
-             
+
 
                     if (siteUrl.Equals("https://petroteks.com"))
                     {
@@ -134,86 +134,89 @@ namespace Petroteks.MvcUi.Controllers
 
                     }
 
-
-                    ICollection<Category> Categories = new List<Category>();
-                    sb.AppendLine($"Kategori listesi olusturuldu");
-                    try
+                    foreach (var lang in LanguageContext.WebsiteLanguages)
                     {
-                        Categories = categoryService.GetMany(x => x.WebSiteid == CurrentWebsite.id && x.IsActive == true, CurrentLanguage.id);
-                        sb.AppendLine($"Kategori listesi veritabanindan dolduruldu");
-
-                        foreach (Category item in Categories)
+                        ICollection<Category> Categories = new List<Category>();
+                        sb.AppendLine($"Kategori listesi olusturuldu");
+                        try
                         {
-                            sb.AppendLine($"{item.Name} kategorisi bilgisi alindi");
-                            xtr.WriteStartElement("url");
-                            xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("CategoryDetail", "Detail", new { categoryName = GetFriendlyTitle(item.Name), page = 1, category = item.id })}");
-                            xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
-                            xtr.WriteEndElement();
-                            sb.AppendLine($"{item.Name} kategorisi bilgisi yazildi");
+                            Categories = categoryService.GetMany(x => x.WebSiteid == CurrentWebsite.id && x.IsActive == true, lang.id);
+                            sb.AppendLine($"Kategori listesi veritabanindan dolduruldu");
+
+                            foreach (Category item in Categories)
+                            {
+                                sb.AppendLine($"{item.Name} kategorisi bilgisi alindi");
+                                xtr.WriteStartElement("url");
+                                xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("CategoryDetail", "Detail", new { categoryName = GetFriendlyTitle(item.Name), page = 1, category = item.id })}");
+                                xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
+                                xtr.WriteEndElement();
+                                sb.AppendLine($"{item.Name} kategorisi bilgisi yazildi");
+                            }
                         }
-                    }
-                    catch { }
+                        catch { }
 
-                    try
-                    {
-
-                        ICollection<Product> Products = productService.GetMany(x => x.IsActive == true);
-                        sb.AppendLine($"Urun listesi olusturuldu");
-
-                        var WebsiteProducts =
-                                            from category in Categories
-                                            join prod in Products on category.id equals prod.Categoryid
-                                            select new { ProductName = prod.SupTitle, id = prod.id, UpdateDate = prod.UpdateDate, CreateDate = prod.CreateDate };
-                        sb.AppendLine($"Urun listesi veritabanindan dolduruldu");
-
-
-                        foreach (var item in WebsiteProducts)
+                        try
                         {
-                            sb.AppendLine($"{item.ProductName} urun bilgisi alindi");
 
-                            xtr.WriteStartElement("url");
-                            xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("ProductDetail", "Detail", new { produtname = GetFriendlyTitle(item.ProductName), id = item.id })}");
-                            xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
-                            xtr.WriteEndElement();
-                            sb.AppendLine($"{item.ProductName} urun bilgisi yazildi");
+                            ICollection<Product> Products = productService.GetMany(x => x.IsActive == true,lang.id);
+                            sb.AppendLine($"Urun listesi olusturuldu");
+
+                            var WebsiteProducts =
+                                                from category in Categories
+                                                join prod in Products on category.id equals prod.Categoryid
+                                                select new { ProductName = prod.SupTitle, id = prod.id, UpdateDate = prod.UpdateDate, CreateDate = prod.CreateDate };
+                            sb.AppendLine($"Urun listesi veritabanindan dolduruldu");
+
+
+                            foreach (var item in WebsiteProducts)
+                            {
+                                sb.AppendLine($"{item.ProductName} urun bilgisi alindi");
+
+                                xtr.WriteStartElement("url");
+                                xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("ProductDetail", "Detail", new { produtname = GetFriendlyTitle(item.ProductName), id = item.id })}");
+                                xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
+                                xtr.WriteEndElement();
+                                sb.AppendLine($"{item.ProductName} urun bilgisi yazildi");
+                            }
                         }
-                    }
-                    catch { }
+                        catch { }
 
-                    try
-                    {
-                        ICollection<DynamicPage> dynamicPages = dynamicPageService.GetMany(x => x.WebSiteid == CurrentWebsite.id && x.IsActive == true, CurrentLanguage.id);
-                        sb.AppendLine($"dinamik sayfalar listesi olusturuldu");
-
-                        foreach (DynamicPage item in dynamicPages)
+                        try
                         {
-                            sb.AppendLine($"{item.Name} sayfasi icin bilgi alindi");
-                            xtr.WriteStartElement("url");
-                            xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("DynamicPageView", "Home", new { pageName = GetFriendlyTitle(item.Name), id = item.id })}");
-                            xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
-                            xtr.WriteEndElement();
-                            sb.AppendLine($"{item.Name} sayfasi icin bilgi yazildi");
+                            ICollection<DynamicPage> dynamicPages = dynamicPageService.GetMany(x => x.WebSiteid == CurrentWebsite.id && x.IsActive == true, lang.id);
+                            sb.AppendLine($"dinamik sayfalar listesi olusturuldu");
+
+                            foreach (DynamicPage item in dynamicPages)
+                            {
+                                sb.AppendLine($"{item.Name} sayfasi icin bilgi alindi");
+                                xtr.WriteStartElement("url");
+                                xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("DynamicPageView", "Home", new { pageName = GetFriendlyTitle(item.Name), id = item.id })}");
+                                xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
+                                xtr.WriteEndElement();
+                                sb.AppendLine($"{item.Name} sayfasi icin bilgi yazildi");
+                            }
                         }
-                    }
-                    catch { }
+                        catch { }
 
-                    try
-                    {
-                        ICollection<Blog> blogs = blogService.GetMany(x => x.WebSiteid == CurrentWebsite.id && x.IsActive == true, CurrentLanguage.id);
-                        sb.AppendLine($"Blog listesi veritabanindan alindi");
-
-                        foreach (Blog item in blogs)
+                        try
                         {
-                            sb.AppendLine($"{item.Name} blogunun bilgisi alindi");
-                            xtr.WriteStartElement("url");
-                            xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("BlogDetail", "Home", new { title = GetFriendlyTitle(item.Title), id = item.id })}");
-                            xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
-                            xtr.WriteEndElement();
-                            sb.AppendLine($"{item.Name} blogunun bilgisi yazildi");
+                            ICollection<Blog> blogs = blogService.GetMany(x => x.WebSiteid == CurrentWebsite.id && x.IsActive == true, lang.id);
+                            sb.AppendLine($"Blog listesi veritabanindan alindi");
 
+                            foreach (Blog item in blogs)
+                            {
+                                sb.AppendLine($"{item.Name} blogunun bilgisi alindi");
+                                xtr.WriteStartElement("url");
+                                xtr.WriteElementString("loc", $"{siteUrl}{Url.Action("BlogDetail", "Home", new { title = GetFriendlyTitle(item.Title), id = item.id })}");
+                                xtr.WriteElementString("lastmod", $"{(item.UpdateDate ?? item.CreateDate).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")}+03:00");
+                                xtr.WriteEndElement();
+                                sb.AppendLine($"{item.Name} blogunun bilgisi yazildi");
+
+                            }
                         }
+                        catch { }
                     }
-                    catch { }
+
                     try
                     {
                         sb.AppendLine("Kapanma islemi basladi");
@@ -230,6 +233,7 @@ namespace Petroteks.MvcUi.Controllers
                     {
                         sb.AppendLine(ex.Message);
                     }
+
                 }
                 catch
                 {
