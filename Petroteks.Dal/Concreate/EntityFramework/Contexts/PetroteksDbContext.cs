@@ -13,6 +13,7 @@ namespace Petroteks.Dal.Concreate.EntityFramework.Contexts
             //optionsBuilder.UseSqlServer(@"Data Source=DANIGA-PC\SQLEXPRESS;Initial Catalog=Petroteks;Integrated Security=True");
             base.OnConfiguring(optionsBuilder);
         }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Website> Websites { get; set; }
         public DbSet<AboutUsObject> AboutUsObjects { get; set; }

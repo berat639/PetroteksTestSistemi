@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using static Petroteks.Bll.Helpers.FriendlyUrlHelper;
@@ -43,28 +44,33 @@ namespace Petroteks.MvcUi.Controllers
             webHostEnvironment = serviceProvider.GetService<IWebHostEnvironment>();
         }
 
-        class xmlWrite
-        {
-
-        }
-
         [Route("sitemap.xml")]
         public IActionResult SitemapXml()
         {
-            IActionResult staticfileload()
+            IActionResult staticfileload(Exception ex)
             {
-                var dir = Path.Combine(webHostEnvironment.WebRootPath, "HataKontrolLogs");
-                Directory.CreateDirectory(dir);
-                string logfile = Path.Combine(dir, "Logx.txt");
-                System.IO.File.WriteAllText(logfile, "Static File Loaded", Encoding.UTF8);
-                var sitemapxml = Path.Combine(Path.Combine(webHostEnvironment.WebRootPath, "Temp"), "sitemap.xml");
-                return Content(System.IO.File.ReadAllText(sitemapxml), "text/xml");
+                try
+                {
+                    var dir = Path.Combine(webHostEnvironment.WebRootPath, "HataKontrolLogs");
+                    Directory.CreateDirectory(dir);
+                    string exlogfile = Path.Combine(dir, "Logx2.txt");
+                    System.IO.File.WriteAllText(exlogfile, ex == null ? "Cookie" : ex.Message, Encoding.UTF8);
+
+                    string logfile = Path.Combine(dir, "Logx.txt");
+                    System.IO.File.WriteAllText(logfile, "Static File Loaded", Encoding.UTF8);
+                    var sitemapxml = Path.Combine(Path.Combine(webHostEnvironment.WebRootPath, "Temp"), "sitemap.xml");
+                    return Content(System.IO.File.ReadAllText(sitemapxml), "text/xml");
+                }
+                catch (Exception exx)
+                {
+                    return Content($"Hata {exx.Message}");
+                }
             }
             Response.Clear();
             Response.ContentType = "text/xml";
             StringBuilder sb = new StringBuilder();
             StringWriter sw = new StringWriter();
-            if (CurrentWebsite != null && CurrentLanguage != null )
+            if (CurrentWebsite != null && CurrentLanguage != null)
             {
                 sb.AppendLine($"Lang: {CurrentLanguage.id}");
                 sb.AppendLine($"Web: {CurrentWebsite.id}");
@@ -300,15 +306,29 @@ namespace Petroteks.MvcUi.Controllers
                     }
                     System.IO.File.WriteAllText(logfile, sb.ToString(), Encoding.UTF8);
                 }
-                catch 
+                catch (Exception ex)
                 {
-                   return staticfileload();
+                    var dir = Path.Combine(webHostEnvironment.WebRootPath, "HataKontrolLogs");
+                    Directory.CreateDirectory(dir);
+                    string logfile = Path.Combine(dir, "Logx2.txt");
+                    System.IO.File.WriteAllText(logfile, $"{ex.Message}", Encoding.UTF8);
+                    return staticfileload(ex);
                 }
-                Response.WriteAsync(sw.ToString());
+                try
+                {
+                    using (StreamWriter streamWriter = new StreamWriter(Response.Body))
+                    {
+                        streamWriter.WriteAsync(sw.ToString()).Wait();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return staticfileload(ex);
+                }
             }
             else
             {
-                return staticfileload();
+                return staticfileload(null);
             }
             return View();
         }
