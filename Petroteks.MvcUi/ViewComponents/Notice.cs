@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Petroteks.Bll.Abstract;
 using Petroteks.Entities.ComplexTypes;
 using Petroteks.MvcUi.ExtensionMethods;
-using System;
-using System.Collections.Generic;
 
 namespace Petroteks.MvcUi.ViewComponents
 {

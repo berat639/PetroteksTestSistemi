@@ -1,8 +1,8 @@
-﻿using Petroteks.Core.Dal;
+﻿using System;
+using System.Linq.Expressions;
+using Petroteks.Core.Dal;
 using Petroteks.Entities.ComplexTypes;
 using Petroteks.Entities.Concreate;
-using System;
-using System.Linq.Expressions;
 
 namespace Petroteks.Bll.Abstract
 {

@@ -1,5 +1,5 @@
-﻿using Petroteks.Entities.Concreate;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Petroteks.Entities.Concreate;
 
 namespace Petroteks.MvcUi.Areas.Admin.Data
 {

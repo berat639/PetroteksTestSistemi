@@ -1,7 +1,7 @@
-﻿using Petroteks.Bll.Abstract;
-using Petroteks.MvcUi.Models.MI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Petroteks.Bll.Abstract;
+using Petroteks.MvcUi.Models.MI;
 
 namespace Petroteks.MvcUi.Models
 {

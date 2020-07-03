@@ -1,10 +1,10 @@
-﻿using Petroteks.Bll.Abstract;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using Petroteks.Bll.Abstract;
 using Petroteks.Bll.Helpers;
 using Petroteks.Dal.Abstract;
 using Petroteks.Entities.Concreate;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace Petroteks.Bll.Concreate
 {

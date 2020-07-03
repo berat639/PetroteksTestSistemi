@@ -1,9 +1,9 @@
-﻿using Petroteks.Bll.Abstract;
-using Petroteks.Dal.Abstract;
-using Petroteks.Entities.Concreate;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Petroteks.Bll.Abstract;
+using Petroteks.Dal.Abstract;
+using Petroteks.Entities.Concreate;
 using static Petroteks.Bll.Helpers.LanguageContext;
 namespace Petroteks.Bll.Concreate
 {

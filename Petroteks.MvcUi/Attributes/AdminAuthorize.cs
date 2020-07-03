@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Petroteks.Entities.Concreate;
 using Petroteks.MvcUi.ExtensionMethods;
-using System;
 
 namespace Petroteks.MvcUi.Attributes
 {

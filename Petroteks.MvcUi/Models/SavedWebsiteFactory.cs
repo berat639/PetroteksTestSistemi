@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Petroteks.MvcUi.ExtensionMethods;
-using System;
+﻿using System;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Petroteks.MvcUi.ExtensionMethods;
 
 namespace Petroteks.MvcUi.Models
 {

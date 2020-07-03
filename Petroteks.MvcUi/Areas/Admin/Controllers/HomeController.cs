@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Mail;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Petroteks.Bll.Abstract;
@@ -11,12 +17,6 @@ using Petroteks.MvcUi.Attributes;
 using Petroteks.MvcUi.ExtensionMethods;
 using Petroteks.MvcUi.Models;
 using Petroteks.MvcUi.Services;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
 
 namespace Petroteks.MvcUi.Areas.Admin.Controllers
 {
@@ -113,6 +113,7 @@ namespace Petroteks.MvcUi.Areas.Admin.Controllers
 
             return View();
         }
+
 
         [AllowAnonymous]
         [Route("Kayit")]
