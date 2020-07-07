@@ -6,24 +6,18 @@
 }
 @{
     ViewData["Title"] = Model.CurrentCategory.Name;
-    ViewData["Description"] = Model.CurrentCategory.Name + " ürünleri ve özellikleri | Petroteks ";
+    ViewData["Description"] = Model.CurrentCategory.Name + " sondaj kategorisinde ürünlerin kullanımı ve özelliklerini detaylı olarak inceleyebilirsiniz.";
     ViewData["MetaTags"] = $"<meta name='twitter:card' content='summary' /> <meta name='twitter:site' content='{CurrentWebsite.Name}/" + Model.CurrentCategory.Name.Replace(" ", "-") + "-" + Model.CurrentPage + "-" + Model.CurrentCategory.id + "'/> <meta name='twitter:creator' content='@Petroteks' /> <meta property='og:title' content='" + Model.CurrentCategory.Name + "'> <meta property='og:type' content='website'> <meta property='og:description' content='" + Model.CurrentCategory.Name + " ürünleri ve özellikleri'> <meta property='og:image' content='" + @CurrentWebsite.Name + "/CategoryImages/" + Model.CurrentCategory.PhotoPath + "'> <meta property='og:url' content='{CurrentWebsite.Name}/" + Model.CurrentCategory.Name.Replace(" ", "-") + "-" + Model.CurrentPage + "-" + Model.CurrentCategory.id + "'/> <meta property='og:title' content='" + Model.CurrentCategory.Name + "' />";
     ViewData["Keywords"] = "Sondaj kategorileri, Sondaj ürünleri," + Model.CurrentCategory.Name;
 }
-<section class="clearfix" id="intro2">
+<section class="clearfix section-bg" style="height:29vh;" >
     <div class="container d-flex h-100">
-        <div class="row justify-content-center align-self-center">
-            <div class="col-md-12 text-center intro-info order-md-first order-last">
-                <div class="wow fadeInLeft" data-wow-delay="0.2s">
-                    <h2>@Model.CurrentCategory.Name</h2>
-                </div>
-            </div>
-        </div>
+        <h4 class="bannerhead">@Model.CurrentCategory.Name</h4>
     </div>
 </section>
 
 
-<section id="team" class="section-bg">
+<section id="team">
     <div class="container">
         <div class="row">
             @foreach (var item in Model.SubCategories)
