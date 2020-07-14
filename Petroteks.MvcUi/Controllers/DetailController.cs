@@ -47,6 +47,8 @@ namespace Petroteks.MvcUi.Controllers
                 return RedirectToAction("CategoryNotFound");
             }
         }
+
+
         [Route("Urun-Detay/{produtname}-{id:int}")]
         [HttpGet]
         public IActionResult ProductDetail(int id)
