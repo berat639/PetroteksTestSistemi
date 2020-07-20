@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -8,8 +10,6 @@ using Petroteks.Bll.Helpers;
 using Petroteks.Entities.Concreate;
 using Petroteks.MvcUi.ExtensionMethods;
 using Petroteks.MvcUi.Services;
-using System;
-using System.Linq;
 
 namespace Petroteks.MvcUi.Controllers
 {
@@ -109,8 +109,13 @@ namespace Petroteks.MvcUi.Controllers
             if (LanguageContext.WebsiteLanguages == null || decision)
             {
                 if (_tempWebsite == null)
+                {
                     if (CurrentWebsite != null)
+                    {
                         _tempWebsite = CurrentWebsite;
+                    }
+                }
+
                 LanguageContext.WebsiteLanguages = languageService.GetMany(x => x.IsActive == true && x.WebSiteid == _tempWebsite.id);
 
                 Language currentLanguage = CurrentLanguage;
@@ -153,14 +158,21 @@ namespace Petroteks.MvcUi.Controllers
         }
 
 
-        public RedirectToActionResult PreparingPage() => RedirectToAction("PreparingPage", "Error");
-        public RedirectToActionResult NotFoundPage() => RedirectToAction("404", "Error");
+        public RedirectToActionResult PreparingPage()
+        {
+            return RedirectToAction("PreparingPage", "Error");
+        }
+
+        public RedirectToActionResult NotFoundPage()
+        {
+            return RedirectToAction("404", "Error");
+        }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (CurrentLanguage == null || CurrentWebsite == null)
             {
-                var currentPage = urlControlHelper.getCurrnetPage();
+                (string area, string controller, string action) currentPage = urlControlHelper.getCurrnetPage();
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { area = $"{currentPage.area}", controller = $"{currentPage.controller}", action = $"{currentPage.action}" }));
             }
             base.OnActionExecuting(context);

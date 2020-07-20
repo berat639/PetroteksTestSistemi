@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using System;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Petroteks.Entities.Concreate;
 using Petroteks.MvcUi.Controllers;
 using Petroteks.MvcUi.ExtensionMethods;
 using Petroteks.MvcUi.Services;
-using System;
 
 namespace Petroteks.MvcUi.Areas.Admin.Controllers
 {

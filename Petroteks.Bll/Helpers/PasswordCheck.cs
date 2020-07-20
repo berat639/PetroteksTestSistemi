@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.Linq;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Identity;
 
 namespace Petroteks.Bll.Helpers
 {

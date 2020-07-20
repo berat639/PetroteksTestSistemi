@@ -1,5 +1,5 @@
-﻿using Petroteks.Entities.Abstract;
-using System;
+﻿using System;
+using Petroteks.Entities.Abstract;
 
 namespace Petroteks.Entities.ComplexTypes
 {

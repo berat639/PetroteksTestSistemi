@@ -18,6 +18,9 @@
     <loc>https://petroteks.com/Bloglar.html</loc>
   </url>
   <url>
+    <loc>https://petroteks.com/error/404</loc>
+  </url>
+  <url>
     <loc>https://petroteks.com/Kategori-Detay/root-1-1</loc>
     <lastmod>2020-01-11T18:25:03+03:00</lastmod>
   </url>
@@ -365,6 +368,7 @@
     <loc>https://petroteks.com/Urun-Detay/thincell-64</loc>
     <lastmod>2020-06-21T19:02:34+03:00</lastmod>
   </url>
+  
   <url>
     <loc>https://petroteks.com/Urun-Detay/polythin-65</loc>
     <lastmod>2020-06-21T19:03:11+03:00</lastmod>

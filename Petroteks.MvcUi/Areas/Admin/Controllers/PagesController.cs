@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System;
+using System.IO;
+using System.Linq;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Petroteks.Bll.Abstract;
 using Petroteks.Entities.ComplexTypes;
@@ -7,9 +10,6 @@ using Petroteks.MvcUi.Areas.Admin.Models;
 using Petroteks.MvcUi.Attributes;
 using Petroteks.MvcUi.ExtensionMethods;
 using Petroteks.MvcUi.Models;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace Petroteks.MvcUi.Areas.Admin.Controllers
 {
