@@ -178,7 +178,7 @@ namespace Petroteks.MvcUi.Controllers
             if (CurrentLanguage == null || CurrentWebsite == null)
             {
                 (string area, string controller, string action) currentPage = urlControlHelper.getCurrnetPage();
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { area = $"{currentPage.area}", controller = $"{currentPage.controller}", action = $"{currentPage.action}" }));
+                context.Result = new RedirectToActionResult(currentPage.action, currentPage.controller, new { area = $"{currentPage.area}" }, true);
             }
             base.OnActionExecuting(context);
             //{
