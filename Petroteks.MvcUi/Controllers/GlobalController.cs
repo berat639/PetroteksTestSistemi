@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -41,7 +42,6 @@ namespace Petroteks.MvcUi.Controllers
             LoadWebsite();
         }
 
-        private Website _tempWebsite;
 
         public Language CurrentLanguage => languageCookieService.Get("CurrentLanguage");
 
@@ -62,7 +62,7 @@ namespace Petroteks.MvcUi.Controllers
 
         private void LoadWebsite()
         {
-            if (WebsiteContext.Websites == null || CurrentWebsite==null)
+            if (WebsiteContext.Websites == null || CurrentWebsite == null)
             {
                 WebsiteContext.Websites = websiteService.GetMany(x => x.IsActive == true);
 
@@ -74,7 +74,6 @@ namespace Petroteks.MvcUi.Controllers
 
                     if (website != null)
                     {
-                        _tempWebsite = website;
                         SetWebsite(website);
                     }
                     else
@@ -83,15 +82,12 @@ namespace Petroteks.MvcUi.Controllers
                         CreateDefaultWebsite(url, siteName);
                         WebsiteContext.Websites = websiteService.GetMany(x => x.IsActive == true);
                     }
-                    if (!_tempWebsite.Name.Contains("localhost"))
+
+                   if (!CurrentWebsite.Name.Contains("localhost"))
                     {
                         Website localhost = WebsiteContext.Websites.FirstOrDefault(w => w.Name.Contains("localhost"));
                         WebsiteContext.Websites.Remove(localhost);
                     }
-                }
-                else
-                {
-                    _tempWebsite = CurrentWebsite;
                 }
             }
             LoadLanguage();
@@ -107,21 +103,12 @@ namespace Petroteks.MvcUi.Controllers
             websiteService.Add(wb);
             websiteService.Save();
             SetWebsite(wb);
-            _tempWebsite = wb;
         }
         public void LoadLanguage(bool decision = false, int? id = null)
         {
-            if (LanguageContext.WebsiteLanguages == null || decision || CurrentLanguage==null)
+            if (LanguageContext.WebsiteLanguages == null || decision || CurrentLanguage == null)
             {
-                if (_tempWebsite == null)
-                {
-                    if (CurrentWebsite != null)
-                    {
-                        _tempWebsite = CurrentWebsite;
-                    }
-                }
-
-                LanguageContext.WebsiteLanguages = languageService.GetMany(x => x.IsActive == true && x.WebSiteid == _tempWebsite.id);
+                LanguageContext.WebsiteLanguages = languageService.GetMany(x => x.IsActive == true && x.WebSiteid == CurrentWebsite.id);
 
                 Language currentLanguage = CurrentLanguage;
                 if (decision)
@@ -144,7 +131,7 @@ namespace Petroteks.MvcUi.Controllers
                             Default = true,
                             KeyCode = "tr-TR",
                             Name = "Türkçe",
-                            WebSite = _tempWebsite,
+                            WebSite = CurrentWebsite,
                             IconCode = "tr-TR_Türkçe.png"
                         };
                         languageService.Add(currentLanguage);
@@ -158,7 +145,6 @@ namespace Petroteks.MvcUi.Controllers
         public void ChangeWebsiteThenChangeLanguage(Website website)
         {
             SetWebsite(website);
-            _tempWebsite = website;
             LoadLanguage(true);
         }
 
@@ -173,24 +159,14 @@ namespace Petroteks.MvcUi.Controllers
             return RedirectToAction("404", "Error");
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            if (CurrentLanguage == null || CurrentWebsite == null)
-            {
-                (string area, string controller, string action) currentPage = urlControlHelper.getCurrnetPage();
-                context.Result = new RedirectToActionResult(currentPage.action, currentPage.controller, new { area = $"{currentPage.area}" }, true);
-            }
-            base.OnActionExecuting(context);
-            //{
-            //    var path = Path.Combine(webHostEnvironment.WebRootPath, "HataKontrolLogs");
-            //    var filepath = Path.Combine(path, "Loop.txt");
-            //    if (!System.IO.File.Exists(filepath))
-            //        System.IO.File.Create(filepath);
-            //    StringBuilder sb = new StringBuilder(System.IO.File.ReadAllText(filepath));
-            //    sb.AppendLine($"Website:{CurrentWebsite?.Name}  Language: {CurrentLanguage?.Name} DateTime:{DateTime.Now}");
-            //    System.IO.File.WriteAllText(filepath, sb.ToString());
-            //}
-            //context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { area = $"", controller = $"Error", action = $"PreparingPage" }));
-        }
+        //public override void OnActionExecuting(ActionExecutingContext context)
+        //{
+        //    if (CurrentLanguage == null || CurrentWebsite == null)
+        //    {
+        //        (string area, string controller, string action) currentPage = urlControlHelper.getCurrnetPage();
+        //        context.Result = new RedirectToActionResult(currentPage.action, currentPage.controller, new { area = $"{currentPage.area}" }, true);
+        //    }
+        //    base.OnActionExecuting(context);
+        //}
     }
 }

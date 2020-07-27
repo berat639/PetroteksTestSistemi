@@ -1,6 +1,7 @@
 using System;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -107,24 +108,16 @@ namespace Petroteks.MvcUi
                                   });
             });
 
-            services.AddSession();
+            services.AddSession(opt =>
+            {
+                opt.IdleTimeout = TimeSpan.FromDays(10);
+            });
             services.AddMemoryCache();
             services.AddDistributedMemoryCache();
-
-            //services.Configure<CookieTempDataProviderOptions>(options => {
-            //    options.Cookie.IsEssential = true;
-            //});
-
-            //services.Configure<CookiePolicyOptions>(options =>
-            //{
-            //    options.CheckConsentNeeded = context => true;
-            //    options.MinimumSameSitePolicy = SameSiteMode.None;
-            //});
 
 
             services.AddRazorPages();
             IMvcBuilder mvcBuilder = services.AddControllersWithViews();
-            //mvcBuilder.AddApplicationPart(Assembly.GetExecutingAssembly());
 #if DEBUG
             mvcBuilder.AddRazorRuntimeCompilation();
 #endif
@@ -160,7 +153,7 @@ namespace Petroteks.MvcUi
                       if (
                       path.EndsWith(".gif") || path.EndsWith(".jpg") ||
                       path.EndsWith(".png") || path.EndsWith(".svg") ||
-                      path.EndsWith(".webp") || path.EndsWith(".woff2")||
+                      path.EndsWith(".webp") || path.EndsWith(".woff2") ||
                       path.EndsWith(".css") || path.EndsWith(".js"))
                       {
                           TimeSpan maxAge = new TimeSpan(365, 0, 0, 0);

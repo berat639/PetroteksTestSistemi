@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Petroteks.Bll.Abstract;
 using Petroteks.Bll.Helpers;
@@ -49,20 +50,9 @@ namespace Petroteks.MvcUi.Controllers
             {
                 return PreparingPage();
             }
-            //ICollection<Category> category = categoryService.GetMany(x => x.WebSiteid == CurrentWebsite.id && x.IsActive == true && x.Parentid == 0 && x.Name != "ROOT", CurrentLanguage.id).OrderByDescending(X => X.Priority).OrderByDescending(x => x.CreateDate).ToList();
-            //Category ROOTCategory = categoryService.Get(x => x.IsActive == true && x.Name == "ROOT" && x.WebSiteid == CurrentWebsite.id, CurrentLanguage.id);
-            //ICollection<Product> products = null;
-            //if (ROOTCategory != null)
-            //{
-            //    products = productService.GetMany(x => x.IsActive == true && x.Categoryid == ROOTCategory.id, CurrentLanguage.id).OrderByDescending(X => X.Priority).OrderByDescending(x => x.CreateDate).ToList();
-            //}
-            //ICollection<Blog> blogs = blogService.GetMany(x => x.WebSiteid == CurrentWebsite.id && x.IsActive == true).OrderByDescending(x => x.CreateDate).OrderByDescending(x=>x.Priority).Take(3).ToList();
             return View(new MainPageViewModel()
             {
                 MainPage = mainPage,
-                //Blogs = blogs,
-                //Categories = category,
-                //Products = products
             });
         }
         [Route("Sayfalar/{pageName}-{id:int}")]
